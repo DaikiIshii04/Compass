@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use DB;
-
+use App\Http\Requests\RegisterFormRequest;
 use App\Models\Users\Subjects;
 
 class RegisterController extends Controller
@@ -57,8 +57,9 @@ class RegisterController extends Controller
         return view('auth.register.register', compact('subjects'));
     }
 
-    public function registerPost(Request $request)
+    public function registerPost(RegisterFormRequest $request)
     {
+        // トランザクションでコミットされるまでひたすら処理
         DB::beginTransaction();
         try{
             $old_year = $request->old_year;
@@ -79,10 +80,14 @@ class RegisterController extends Controller
                 'role' => $request->role,
                 'password' => bcrypt($request->password)
             ]);
+            // findで新規登録者の情報とUserIDが一致しているかどうか
             $user = User::findOrFail($user_get->id);
+            // 一致していたら$subjectと連携
             $user->subjects()->attach($subjects);
+            // コミットされればDBへ反映
             DB::commit();
             return view('auth.login.login');
+            // エラーが出たらキャッチしてロールバック
         }catch(\Exception $e){
             DB::rollback();
             return redirect()->route('loginView');

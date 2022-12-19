@@ -12,10 +12,12 @@ class Subjects extends Model
 
 
     protected $fillable = [
+        'id',
         'subject'
     ];
 
+    // SubjectsテーブルへUsersテーブルをリレーション
     public function users(){
-        return;// リレーションの定義
+        return $this->belongsToMany('App\Models\Users\User');// リレーションの定義
     }
 }
