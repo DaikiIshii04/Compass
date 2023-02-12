@@ -24,8 +24,10 @@
       <p><a href="{{ route('calendar.general.show',['user_id' => Auth::id()]) }}">スクール予約</a></p>
 
       <!-- 以下２項目ロール１〜３（教師）のみ表示 -->
+      @if(Auth::user()->role!=4)
       <p><a href="{{ route('calendar.admin.show',['user_id' => Auth::id()]) }}">スクール予約確認</a></p>
       <p><a href="{{ route('calendar.admin.setting',['user_id' => Auth::id()]) }}">スクール枠登録</a></p>
+      @endif
 
       <p><a href="{{ route('post.show') }}">掲示板</a></p>
       <p><a href="{{ route('user.show') }}">ユーザー検索</a></p>
