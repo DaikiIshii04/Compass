@@ -22,16 +22,14 @@ class RegisterFormRequest extends FormRequest
      */
     public function getValidatorInstance()
     {
-        // プルダウンで選択された値(= 配列)を取得
-        $birth_day = $this->input('old_year','old_month','old_day', array()); //デフォルト値は空の配列
-
-        // 日付を作成(ex. 2020-1-20)
-        $birth_day_validation = implode('-', $birth_day);
-
-        // rules()に渡す値を追加でセット
-        //     これで、この場で作った変数にもバリデーションを設定できるようになる
+        // 個別で誕生日のデータを取得
+        $old_year = $this->input('old_year');
+        $old_month = $this->input('old_month');
+        $old_day = $this->input('old_day');
+        // 誕生日データの結合
+        $birth_day = ($old_year . '-' . $old_month . '-' . $old_day);
         $this->merge([
-            'birth_day_validation' => $birth_day_validation,
+            'birth_day' => $birth_day,
         ]);
 
         return parent::getValidatorInstance();
@@ -53,7 +51,7 @@ class RegisterFormRequest extends FormRequest
             'sex' => 'required|in:1,2,3',
             'role' => 'required|in:1,2,3,4',
             'subject[]' => 'exits:subjects,subject',
-            'birth_day_validation' => 'required|date|after:2000-01-01',
+            'birth_day' => 'required|date|before:today|after_or_equal:2000-01-01',
             'password' => 'required|min:8|max:30|confirmed',
             'password_confirmation' => 'required',
         ];
@@ -82,7 +80,8 @@ class RegisterFormRequest extends FormRequest
             'sex.in' => '男性、女性、その他のみ有効',
             'role.required' => '必ず入力してください',
             'role.in' => '上記より選択して下さい',
-            'birth_day_validation.after'  => "2000年1月1日以降で登録して下さい",
+            'birth_day.after_or_equal' => '2000年1月1日以降で入力して下さい',
+            'full_data.today'  => '存在しない日付です。',
             'password.required' => '必ず入力して下さい',
             'password.min' => '8文字以上で入力して下さい',
             'password.max' => '30字以内で入力して下さい',

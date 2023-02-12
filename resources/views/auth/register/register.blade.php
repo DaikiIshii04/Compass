@@ -184,8 +184,8 @@
           </select>
           <label style="font-size:13px">日</label>
               <!-- エラーメッセージ -->
-              @if($errors->has('birth_day_validation'))
-              @foreach($errors->get('birth_day_validation') as $message)
+              @if($errors->has('birth_day'))
+              @foreach($errors->get('birth_day') as $message)
               <span class="error_message">{{ $message}}</span>
               @endforeach
               @endif
