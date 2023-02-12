@@ -23,6 +23,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
+        'id',
         'over_name',
         'under_name',
         'over_name_kana',
@@ -70,9 +71,12 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Models\Posts\Like', 'likes', 'like_user_id', 'like_post_id')->withPivot('id');
     }
 
-    // UsersテーブルにSubjectsテーブルをリレーション
+    // UsersテーブルにSubjectsテーブルをリレーションする為中間テーブルへ情報を入れる
     public function subjects(){
-        return $this->belongsToMany(User::class,"subjects","id","subject");
+        return $this->belongsToMany('App\Models\Users\Subjects',
+                                    'subject_users',
+                                    'user_id',
+                                    'subject_id',);
     }
 
     // いいねしているかどうか
