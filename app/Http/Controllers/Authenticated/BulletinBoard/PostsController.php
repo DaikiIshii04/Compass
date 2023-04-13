@@ -15,6 +15,7 @@ use Auth;
 use App\Http\Requests\BulletinBoard\SubCategoryFormRequest;
 use App\Http\Requests\BulletinBoard\MainCategoryFormRequest;
 use App\Http\Requests\BulletinBoard\EditorialPostFormRequest;
+use App\Http\Requests\BulletinBoard\CommentCategoryFormRequest;
 
 class PostsController extends Controller
 {
@@ -88,7 +89,8 @@ class PostsController extends Controller
         return redirect()->route('post.input');
     }
 
-    public function commentCreate(Request $request){
+    public function commentCreate(CommentCategoryFormRequest $request)
+    {
         PostComment::create([
             'post_id' => $request->post_id,
             'user_id' => Auth::id(),
