@@ -20,12 +20,12 @@ class UsersController extends Controller
         $updown = $request->updown;
         $gender = $request->sex;
         $role = $request->role;
-        $subjects = null;// ここで検索時の科目を受け取る
+        $subjects = $request->subjects;// ここで検索時の科目を受け取る
         $userFactory = new SearchResultFactories();
         $users = $userFactory->initializeUsers($keyword, $category, $updown, $gender, $role, $subjects);
-        $subjects = Subjects::all();
-        $role_teachers = User::with('role','1','2','3')->get();
-        return view('authenticated.users.search','authenticated.layouts.sidebar', compact('users', 'subjects','role_teacher'));
+        // $subjects = Subjects::all();
+        // $role_teachers = User::with('role','1','2','3')->get();
+        return view('authenticated.users.search', compact('users', 'subjects'));
     }
 
     public function userProfile($id){
