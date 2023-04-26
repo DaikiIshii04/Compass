@@ -21,9 +21,9 @@ class UsersController extends Controller
         $gender = $request->sex;
         $role = $request->role;
         $subjects = $request->subjects;// ここで検索時の科目を受け取る
+        // dd($subjects);
         $userFactory = new SearchResultFactories();
-        $users = $userFactory->initializeUsers($keyword, $category, $updown, $gender, $role, $subjects);
-        // $subjects = Subjects::all();
+        $users = $userFactory->initializeUsers($keyword, $category, $updown, $gender, $role, $subjects); $subjects = Subjects::all();
         // $role_teachers = User::with('role','1','2','3')->get();
         return view('authenticated.users.search', compact('users', 'subjects'));
     }
@@ -31,6 +31,7 @@ class UsersController extends Controller
     public function userProfile($id){
         $user = User::with('subjects')->findOrFail($id);
         $subject_lists = Subjects::all();
+        // dd($subject_lists);
         return view('authenticated.users.profile', compact('user', 'subject_lists'));
     }
 

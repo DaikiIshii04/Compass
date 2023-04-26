@@ -93,9 +93,13 @@
           <div class="selected_engineer">
             <label>選択科目</label>
             <br>
-            <span value="1">国語</span><input type="checkbox" name="subjects" value="1" form="userSearchRequest"><br>
-            <span value="2">数学</span><input type="checkbox" name="subjects" value="2" form="userSearchRequest"><br>
-            <span value="3">英語</span><input type="checkbox" name="subjects" value="3" form="userSearchRequest">
+          @foreach($user->subjects as $subjects)
+          <div class="">
+            <input type="checkbox" form="userSearchRequest"name="subjects[]" value="{{ $subjects->id }}">
+            <label>{{ $subjects->subject }}</label>
+          </div>
+          @endforeach
+            </select>
           </div>
         </div>
       </div>

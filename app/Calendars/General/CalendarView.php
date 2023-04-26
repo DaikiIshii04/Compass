@@ -64,7 +64,11 @@ class CalendarView{
             $html[] = '<input type="hidden" name="getPart[]" value="" form="reserveParts">';
           }
         }else{
+          if($startDay <= $day->everyDay() && $toDay <= $day->everyDay()){
           $html[] = $day->selectPart($day->everyDay());
+          }else{
+           $html[]='<p>アイウエオ</p>';
+          }
         }
         $html[] = $day->getDate();
         $html[] = '</td>';
