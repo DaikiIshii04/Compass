@@ -23,27 +23,33 @@ class CalendarWeekDay{
     return $this->carbon->format("Y-m-d");
   }
 
-  function dayPartCounts($ymd){
+  function dayPartCounts($ymd)
+  {
     $html = [];
     $one_part = ReserveSettings::with('users')->where('setting_reserve', $ymd)->where('setting_part', '1')->first();
     $two_part = ReserveSettings::with('users')->where('setting_reserve', $ymd)->where('setting_part', '2')->first();
     $three_part = ReserveSettings::with('users')->where('setting_reserve', $ymd)->where('setting_part', '3')->first();
 
     $html[] = '<div class="text-left">';
-    if($one_part){
-      $html[] = '<p class="day_part m-0 pt-1">1部</p>';
+    if ($one_part) {
+      // スクールのカウント
+      // $partCount =
+      $html[] =
+        '<p class="day_part m-0 pt-1"><a href="' . route('calendar.admin.detail', ['id' => $one_part->id, 'data' => $one_part->setting_reserve, 'part' => $one_part->setting_part]) . '">1部</a><span
+        style="margin-left: 15px">' . $one_part->users->count() . '</span></p>';
     }
-    if($two_part){
-      $html[] = '<p class="day_part m-0 pt-1">2部</p>';
+    if ($two_part) {
+      $html[] =
+        '<p class="day_part m-0 pt-1"><a href="' . route('calendar.admin.detail', ['id' => $two_part->id, 'data' => $two_part->setting_reserve, 'part' => $two_part->setting_part]) . '">2部</a><span style="margin-left:15px">' . $two_part->users->count() . '</span></p>';
     }
-    if($three_part){
-      $html[] = '<p class="day_part m-0 pt-1">3部</p>';
+    if ($three_part) {
+      $html[] =
+        '<p class="day_part m-0 pt-1"><a href="' . route('calendar.admin.detail', ['id' => $three_part->id, 'data' => $three_part->setting_reserve, 'part' => $three_part->setting_part]) . '">3部</a><span style="margin-left:15px">' . $three_part->users->count() . '</span></p>';
     }
     $html[] = '</div>';
 
     return implode("", $html);
   }
-
 
   function onePartFrame($day){
     $one_part_frame = ReserveSettings::where('setting_reserve', $day)->where('setting_part', '1')->first();

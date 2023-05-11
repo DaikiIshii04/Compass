@@ -1,21 +1,27 @@
 <?php
+
 namespace App\Calendars\General;
 
 use Carbon\Carbon;
 use Auth;
 
-class CalendarView{
+class CalendarView
+{
 
   private $carbon;
-  function __construct($date){
+  function __construct($date)
+  {
+    // new Carbon()= 現在日付のインスタンスができる
     $this->carbon = new Carbon($date);
   }
 
-  public function getTitle(){
+  public function getTitle()
+  {
     return $this->carbon->format('Y年n月');
   }
 
-  function render(){
+  function render()
+  {
     $html = [];
     $html[] = '<div class="calendar text-center">';
     $html[] = '<table class="table">';
@@ -32,49 +38,50 @@ class CalendarView{
     $html[] = '</thead>';
     $html[] = '<tbody>';
     $weeks = $this->getWeeks();
-    foreach($weeks as $week){
-      $html[] = '<tr class="'.$week->getClassName().'">';
+    foreach ($weeks as $week) {
+      $html[] = '<tr class="' . $week->getClassName() . '">';
 
       $days = $week->getDays();
-      foreach($days as $day){
+      foreach ($days as $day) {
+        // copy　複製
         $startDay = $this->carbon->copy()->format("Y-m-01");
         $toDay = $this->carbon->copy()->format("Y-m-d");
 
-        if($startDay <= $day->everyDay() && $day->everyDay() < $toDay){
+        if ($startDay <= $day->everyDay() && $toDay >= $day->everyDay()) {
+          // past-day記入
           $html[] = '<td class="calendar-td past-day">';
-        }else{
-          $html[] = '<td class="calendar-td '.$day->getClassName().'">';
+        } else {
+          $html[] = '<td class="calendar-td ' . $day->getClassName() . '">';
         }
         $html[] = $day->render();
 
-        // もし予約していたら
-        if(in_array($day->everyDay(), $day->authReserveDay())){
-          $reservePart = $day->authReserveDate($day->everyDay())->first()->setting_part;
-          if($reservePart == 1){
+        // 予約済みであれば下記対応
+        if (in_array($day->everyDay(), $day->authReserveDay())) {
+          $reservePartId = $day->authReserveDate($day->everyDay())->first()->setting_part;
+          if ($reservePartId == 1) {
             $reservePart = "リモ1部";
-          }else if($reservePart == 2){
+          } else if ($reservePartId == 2) {
             $reservePart = "リモ2部";
-          }else if($reservePart == 3){
+          } else if ($reservePartId == 3) {
             $reservePart = "リモ3部";
           }
-          // 今日より未来日だったら
-          if($startDay <= $day->everyDay() && $toDay >= $day->everyDay()){
-            $html[] = '<p class="m-auto p-0 w-75" style="font-size:12px"></p>';
+          //$startDay...月初
+          //予約していれば
+          if ($startDay <= $day->everyDay() && $toDay >= $day->everyDay()) {
+            $html[] = '<p class="m-auto p-0 w-75" style="font-size:12px">'. $reservePart .'</p>';
             $html[] = '<input type="hidden" name="getPart[]" value="" form="reserveParts">';
-            // 過去日だったらボタンを消すよ
-          }else{
-            $html[] = '<button type="submit" class="btn btn-danger p-0 w-75" name="delete_date" style="font-size:12px" value="'. $day->authReserveDate($day->everyDay())->first()->setting_reserve .'">'. $reservePart .'</button>';
+          } else {
+            // キャンセルボタンを設置
+            $html[] = '<button type="submit" class="cancel-modal-open btn btn-danger p-0 w-75" name="" style="font-size:12px" delete_date="' . $day->authReserveDate($day->everyDay())->first()->setting_reserve . '" delete_part="' . $reservePart . '" delete-part-id="' . $reservePartId . '"> ' . $reservePart . '</button>';
             $html[] = '<input type="hidden" name="getPart[]" value="" form="reserveParts">';
           }
-          // もし予約していなかったら
-        }else{
-          // 今日より過去日だったら
-          if($startDay <= $day->everyDay() && $toDay <= $day->everyDay()){
+          // 予約していなければ
+        } else if ($startDay <= $day->everyDay() && $toDay >= $day->everyDay()) {
+          $html[] = '<p>受付終了</p>';
+          $html[] = '<input type="hidden" name="getPart[]" value="" form="reserveParts">';
+        }
+ else {
           $html[] = $day->selectPart($day->everyDay());
-          }else{
-           $html[]='<p>受付終了</p>';
-           $html[] = '<input type="hidden" name="getPart[]" value="" form="reserveParts">';
-          }
         }
         $html[] = $day->getDate();
         $html[] = '</td>';
@@ -84,20 +91,23 @@ class CalendarView{
     $html[] = '</tbody>';
     $html[] = '</table>';
     $html[] = '</div>';
-    $html[] = '<form action="/reserve/calendar" method="post" id="reserveParts">'.csrf_field().'</form>';
-    $html[] = '<form action="/delete/calendar" method="post" id="deleteParts">'.csrf_field().'</form>';
+    $html[] = '<form action="/reserve/calendar" method="post" id="reserveParts">' . csrf_field() . '</form>';
+    $html[] = '<form action="/delete/calendar" method="post" id="deleteParts">' . csrf_field() . '</form>';
 
     return implode('', $html);
   }
 
-  protected function getWeeks(){
+  protected function getWeeks()
+  {
     $weeks = [];
+    // 月初月末
     $firstDay = $this->carbon->copy()->firstOfMonth();
     $lastDay = $this->carbon->copy()->lastOfMonth();
+
     $week = new CalendarWeek($firstDay->copy());
     $weeks[] = $week;
     $tmpDay = $firstDay->copy()->addDay(7)->startOfWeek();
-    while($tmpDay->lte($lastDay)){
+    while ($tmpDay->lte($lastDay)) {
       $week = new CalendarWeek($tmpDay, count($weeks));
       $weeks[] = $week;
       $tmpDay->addDay(7);
