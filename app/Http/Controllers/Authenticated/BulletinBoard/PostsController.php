@@ -10,12 +10,12 @@ use App\Models\Posts\Post;
 use App\Models\Posts\PostComment;
 use App\Models\Posts\Like;
 use App\Models\Users\User;
-use App\Http\Requests\BulletinBoard\PostFormRequest;
+use App\Http\Requests\PostFormRequest;
 use Auth;
-use App\Http\Requests\BulletinBoard\SubCategoryFormRequest;
-use App\Http\Requests\BulletinBoard\MainCategoryFormRequest;
-use App\Http\Requests\BulletinBoard\EditorialPostFormRequest;
-use App\Http\Requests\BulletinBoard\CommentCategoryFormRequest;
+use App\Http\Requests\SubCategoryFormRequest;
+use App\Http\Requests\MainCategoryFormRequest;
+use App\Http\Requests\EditorialPostFormRequest;
+use App\Http\Requests\CommentCategoryFormRequest;
 
 class PostsController extends Controller
 {

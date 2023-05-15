@@ -15,6 +15,7 @@
 <body>
   <form action="{{ route('loginPost') }}" method="POST">
     <div class="w-100 vh-100 d-flex" style="align-items:center; justify-content:center;">
+        <img src="{{ asset('images/atlas-black.png') }}" alt="画像">
       <div class="border vh-50 w-25">
         <div class="w-75 m-auto pt-5">
           <label class="d-block m-0" style="font-size:13px;">メールアドレス</label>
