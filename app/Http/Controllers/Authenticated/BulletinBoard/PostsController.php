@@ -14,7 +14,7 @@ use App\Http\Requests\PostFormRequest;
 use Auth;
 use App\Http\Requests\SubCategoryFormRequest;
 use App\Http\Requests\MainCategoryFormRequest;
-use App\Http\Requests\EditorialPostFormRequest;
+use App\Http\Requests\EditFormRequest;
 use App\Http\Requests\CommentCategoryFormRequest;
 
 class PostsController extends Controller
@@ -30,7 +30,10 @@ class PostsController extends Controller
             ->orWhere('post', 'like', '%'.$request->keyword.'%')->get();
         }else if($request->category_word){
             $sub_category = $request->category_word;
-            $posts = Post::with('user', 'postComments')->get();
+            // $posts = Post::with('user', 'postComments')->get();
+            $posts = Post::with('user', 'postComments','subCategories')->whereHas('subCategories',function ($q) use ($sub_category){
+                $q->where('sub_category',$sub_category);
+            })->get();
         }else if($request->like_posts){
             $likes = Auth::user()->likePostId()->get('like_post_id');
             $posts = Post::with('user', 'postComments')
@@ -55,15 +58,18 @@ class PostsController extends Controller
     }
 
     public function postCreate(PostFormRequest $request){
+        $sub_category_id=$request->post_category_id;
         $post = Post::create([
             'user_id' => Auth::id(),
             'post_title' => $request->post_title,
             'post' => $request->post_body
         ]);
-        return redirect()->route('post.show');
+        $post_id = Post::findOrFail($post->id);
+        $post_id->subCategories()->attach($sub_category_id);
+        return redirect()->route('post.show',['id'=>$request->post_category_id]);
     }
 
-    public function postEdit(Request $request){
+    public function postEdit(EditFormRequest $request){
         Post::where('id', $request->post_id)->update([
             'post_title' => $request->post_title,
             'post' => $request->post_body,
@@ -75,7 +81,7 @@ class PostsController extends Controller
         Post::findOrFail($id)->delete();
         return redirect()->route('post.show');
     }
-    public function mainCategoryCreate(Request $request){
+    public function mainCategoryCreate(MainCategoryFormRequest $request){
         MainCategory::create(['main_category' => $request->main_category_name]);
         return redirect()->route('post.input');
     }

@@ -19,18 +19,18 @@
   <div class="d-flex">
     <div class="sidebar">
       @section('sidebar')
-      <p><a href="{{ route('top.show') }}">トップ</a></p>
-      <p><a href="/logout">ログアウト</a></p>
-      <p><a href="{{ route('calendar.general.show',['user_id' => Auth::id()]) }}">スクール予約</a></p>
+      <p><i class="fas fa-home" style="color: #ffffff;"></i><a href="{{ route('top.show') }}">トップ</a></p>
+      <p><i class="fas fa-sign-out-alt" style="color: #fafafa;"></i><a href="/logout">ログアウト</a></p>
+      <p><i class="fas fa-calendar-plus" style="color: #f7f7f7;"></i><a href="{{ route('calendar.general.show',['user_id' => Auth::id()]) }}">スクール予約</a></p>
 
       <!-- 以下２項目ロール１〜３（教師）のみ表示 -->
       @if(Auth::user()->role!=4)
-      <p><a href="{{ route('calendar.admin.show',['user_id' => Auth::id()]) }}">スクール予約確認</a></p>
-      <p><a href="{{ route('calendar.admin.setting',['user_id' => Auth::id()]) }}">スクール枠登録</a></p>
+      <p><i class="fas fa-calendar-check" style="color: #fcfcfc;"></i><a href="{{ route('calendar.admin.show',['user_id' => Auth::id()]) }}">スクール予約確認</a></p>
+      <p><i class="fas fa-calendar-week" style="color: #f7f7f7;"></i><a href="{{ route('calendar.admin.setting',['user_id' => Auth::id()]) }}">スクール枠登録</a></p>
       @endif
 
-      <p><a href="{{ route('post.show') }}">掲示板</a></p>
-      <p><a href="{{ route('user.show') }}">ユーザー検索</a></p>
+      <p><i class="fas fa-table" style="color: #f5f5f5;"></i><a href="{{ route('post.show') }}">掲示板</a></p>
+      <p><i class="fas fa-users" style="color: #fafafa;"></i><a href="{{ route('user.show') }}">ユーザー検索</a></p>
       @show
     </div>
     <div class="main-container">

@@ -25,7 +25,7 @@ class SubCategoryFormRequest extends FormRequest
     {
         return [
             //
-            'main_category_id' => 'required|exists:sub_categories',
+            'main_category_id' => 'required|exists:main_categories,id',
             'sub_category_name' => 'required|max:100|unique:sub_categories,sub_category'
         ];
     }
@@ -36,6 +36,7 @@ class SubCategoryFormRequest extends FormRequest
             'main_category_id.required' => 'メインカテゴリーの選択をしてください',
             'sub_category_name.required' => 'サブカテゴリーを記入してください',
             'sub_category_name.unique' => 'すでに登録されています',
+            'main_category_id.exists' => 'ふざけるな',
         ];
     }
 }
