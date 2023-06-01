@@ -18,7 +18,7 @@ li {
 
 /* サイドバー */
 .sidebar {
-  width: 150px;
+  width: 200px;
   height: 100vh;
   background-color: #03AAD2;
   font-weight: bold;
@@ -406,4 +406,66 @@ li {
   color: white;
   font-weight: bold;
   /* 他のスタイルプロパティを追加する場合はここに追記します */
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.border.vh-50.w-25 {
+  position: relative;
+  z-index: 2;
+  margin: 10px;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 1;
+  margin: 100px;
+}
+
+.sidebar p {
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+.post_area {
+  position: relative;
+}
+
+.post_bottom_area {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding-right: 10px;
+}
+
+.search_conditions_inner {
+  display: none;
+}
+
+.arrow-down {
+  display: inline-block;
+}
+
+.arrow-up {
+  display: none;
+}
+
+.modal-open .arrow-down {
+  display: none;
+}
+
+.modal-open .arrow-up {
+  display: inline-block;
 }

@@ -72,9 +72,15 @@
           <option value="DESC">降順</option>
         </select>
       </div>
-      <div class="">
-        <p class="m-0 search_conditions"><span>検索条件の追加</span></p>
-        <div class="search_conditions_inner">
+<div class="">
+  <p class="m-0 search_conditions">
+    <span>
+      検索条件の追加
+      <i class="fas fa-arrow-down arrow-down"></i>
+      <i class="fas fa-arrow-up arrow-up"></i>
+    </span>
+  </p>
+  <div class="search_conditions_inner">
           <div>
             <label>性別</label>
             <span>男</span><input type="radio" name="sex" value="1" form="userSearchRequest">
